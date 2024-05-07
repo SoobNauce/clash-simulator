@@ -219,34 +219,55 @@ def main
   end
 end
 
-def prompt_parse(user_input)
-  tokens = user_input.split
-  return :empty unless tokens.any?
-  command = tokens.shift
-  return :help if command == "help"
-  if ["look", "show"].include? command
-    return :look unless tokens.any?
-    return [:look, tokens]
+class PromptResult
+  def initialize(key)
+    puts ({
+      start: "Enter command"
+    }[key])
+    @result = prompt_parse gets.chomp
   end
-  if "select" == command
-    return [:select, tokens]
-  end
-  if "play" == command
-    return [:play, tokens]
+  attr_reader :result
+  def prompt_parse(user_input)
+    tokens = user_input.split
+    return :empty unless tokens.any?
+    command = tokens.shift
+    return :help if command == "help"
+    if ["look", "show"].include? command
+      return :look unless tokens.any?
+      return [:look, tokens]
+    end
+    if "select" == command
+      # select a skill or character
+      return [:select, tokens]
+    end
+    if "play" == command
+      return [:play, tokens]
+    end
   end
 end
-def interactive_prompt(key)
-  puts {
-    start: "Enter command"
-  }[key]
-  prompt_parse gets.chomp
+class InteractiveMode
+  def initialize
+    # set up fighters
+    fighters = setup
+    orchid = fighters[:orchid]
+    miko = fighters[:miko]
+    show_hand(miko)
+    show_hand(orchid)
+  
+    @next_prompt = :start
+    prompt_input
+    while @action != :exit
+      main_loop_once
+    end
+  end
+  def main_loop_once
+    prompt_result = interactive_prompt(:start)
+    while prompt_result != :exit
+      action_list.
+  end
 end
 
-def interactive
-  # set up fighters
-  fighters = setup
-  orchid = fighters[:orchid]
-  miko = fighters[:miko]
+def main
+  game_instance = InteractiveMode.new
+  game_instance.main_loop_full
 end
-
-interactive
