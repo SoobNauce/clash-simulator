@@ -145,8 +145,8 @@ class Critter
 end
 
 def setup
-  orchid_deck = Deck.new(
-    ORCHID_SKILLS.transform_values { |value|
+  bladedancer_deck = Deck.new(
+    BLADEDANCER_SKILLS.transform_values { |value|
       Skill.new(*value)
     }
   )
@@ -156,7 +156,7 @@ def setup
     }
   )
   {
-    orchid: Critter.new("Orchid", orchid_deck, ORCHID_WEIGHTS),
+    bladedancer: Critter.new("Blade Dancer", bladedancer_deck, BLADEDANCER_WEIGHTS),
     miko: Critter.new("Miko", miko_deck, MIKO_WEIGHTS)
   }
 end
@@ -206,16 +206,16 @@ end
 def main
   # set up fighters
   fighters = setup
-  orchid = fighters[:orchid]
+  bladedancer = fighters[:bladedancer]
   miko = fighters[:miko]
 
   1.upto(10) do |_|
-    orchid_skill = orchid.pick_random
-    puts "Orchid skill: #{orchid_skill.summary}"
+    bladedancer_skill = bladedancer.pick_random
+    puts "Orchid skill: #{bladedancer_skill.summary}"
     
     miko_skill = miko.pick_random
     puts "Miko skill: #{miko_skill.summary}"
-    clash(orchid, orchid_skill, miko, miko_skill)
+    clash(bladedancer, bladedancer_skill, miko, miko_skill)
   end
 end
 
@@ -226,7 +226,7 @@ def prompt_parse(user_input)
   return :miko if command == "miko"
   return :orchid if command == "orchid"
   return :bladedancer if command == "bladedancer"
-  return :handsize if command ~= /hand.?size/
+  return :handsize if command =~ /hand.?size/
   return :direct if command == "direct"
   return :draw if command == "draw"
 end
